@@ -1,0 +1,57 @@
+server:
+  port: 8071
+
+spring:
+  application:
+    name: configserver
+
+  profiles:
+    active: git
+
+  cloud:
+    config:
+      server:
+        # Native example:
+        # native:
+        # Use this "native" option for search-location classpath & file system.
+        # search-locations: classpath:/config   # Use the class path. Use inside project folder
+        # search-locations: file:///D:/Study-Material/Master-Microservices-with-SpringBoot-Docker-Kubernetes/Learning_Project/Section6/Config   # Use the file system folder location
+        # Enable above any one search-location when "native" option enabled
+        git:    # When using git then use this option
+          uri: https://github.com/eazybytes/eazybytes-config.git
+          default-label: main   # branch name
+          timeout: 5
+          clone-on-start: true
+          force-pull: true
+
+    stream:
+      bindings:
+        springCloudBusInput:
+          destination: springCloudBus
+          group: configserver   # stable queue name
+        springCloudBusOutput:
+          destination: springCloudBus
+      rabbit:
+        bindings:
+          springCloudBusInput:
+            consumer:
+              declareExchange: true
+              autoBindDlq: true
+              queueNameGroupOnly: true
+
+  rabbitmq:
+    host: "localhost"
+    port: 5672   # Correct AMQP port (not 15672)
+    username: "guest"
+    password: "guest"
+    virtual-host: /
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+encrypt:
+  key: "45D81EC1EF61DF9AD8D3E5BB397F9"
+

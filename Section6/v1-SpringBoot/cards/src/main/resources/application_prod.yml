@@ -1,0 +1,16 @@
+spring:
+  config:
+    activate:
+      on-profile: "prod"
+
+build:
+  version: "3.0"
+
+cards:
+  message: "Welcome to EazyBank cards related PROD APIs"
+  contactDetails:
+    name: "Jammie Smith - Prod Lead"
+    email: "jammie@eazybank.com"
+  onCallSupport:
+    - "(888) 123-1234"
+    - "(888) 321-1345"

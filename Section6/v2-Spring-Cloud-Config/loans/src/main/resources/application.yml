@@ -1,0 +1,57 @@
+server:
+  port: 8090
+
+spring:
+  application:
+    name: loans
+
+  profiles:
+    active: prod
+
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password: ''
+
+  h2:
+    console:
+      enabled: true
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  config:
+    import: optional:configserver:http://localhost:8071/
+
+  cloud:
+    stream:
+      bindings:
+        springCloudBusInput:
+          destination: springCloudBus
+          group: loans-service   # stable queue name
+        springCloudBusOutput:
+          destination: springCloudBus
+      rabbit:
+        bindings:
+          springCloudBusInput:
+            consumer:
+              declareExchange: true    # Force exchange declaration
+              autoBindDlq: true        # Auto-bind dead-letter queue
+              queueNameGroupOnly: true # avoid anonymous queues
+
+  rabbitmq:
+    host: "localhost"
+    port: 5672   # Correct AMQP port (not 15672)
+    username: "guest"
+    password: "guest"
+    virtual-host: /
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

@@ -1,0 +1,16 @@
+spring:
+  config:
+    activate:
+      on-profile: "prod"
+
+build:
+  version: "3.0"
+
+accounts:
+  message: "Welcome to EazyBank accounts related PROD APIs"
+  contactDetails:
+    name: "Aishwarya Roy - Prod Lead"
+    email: "aishwarya@eazybank.com"
+  onCallSupport:
+    - "(453) 123-1234"
+    - "(453) 321-1345"

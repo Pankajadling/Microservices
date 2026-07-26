@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/accounts/src/main/main.iml" filepath="$PROJECT_DIR$/accounts/src/main/main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/loans/src/main/main2.iml" filepath="$PROJECT_DIR$/loans/src/main/main2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/configserver/src/main/main3.iml" filepath="$PROJECT_DIR$/configserver/src/main/main3.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cards/src/main/main4.iml" filepath="$PROJECT_DIR$/cards/src/main/main4.iml" />
+      <module fileurl="file://$PROJECT_DIR$/loans/src/test/test.iml" filepath="$PROJECT_DIR$/loans/src/test/test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/configserver/src/test/test2.iml" filepath="$PROJECT_DIR$/configserver/src/test/test2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cards/src/test/test3.iml" filepath="$PROJECT_DIR$/cards/src/test/test3.iml" />
+      <module fileurl="file://$PROJECT_DIR$/accounts/src/test/test4.iml" filepath="$PROJECT_DIR$/accounts/src/test/test4.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/v2-Spring-Cloud-Config.iml" filepath="$PROJECT_DIR$/.idea/v2-Spring-Cloud-Config.iml" />
+    </modules>
+  </component>
+</project>
