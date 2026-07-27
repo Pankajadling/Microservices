@@ -1,57 +1,59 @@
 server:
-  port: 8080
+  port: 8080   # ✅ Accounts service will run on port 8080
 
 spring:
   application:
-    name: accounts
+    name: accounts   # ✅ Application name
 
   profiles:
-    active: prod
+    active: prod   # ⚠️ Currently set to 'prod' but datasource is H2 (in-memory DB).
+                   # For production, you should use a real DB (e.g., MySQL/Postgres).
+                   # Keep H2 only for dev/testing.
 
   datasource:
-    url: jdbc:h2:mem:testdb
+    url: jdbc:h2:mem:testdb   # ⚠️ In-memory DB (not suitable for prod)
     driverClassName: org.h2.Driver
     username: sa
     password: ''
 
   h2:
     console:
-      enabled: true
+      enabled: true   # ⚠️ H2 console enabled (good for dev, disable in prod)
 
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
-      ddl-auto: update
-    show-sql: true
+      ddl-auto: update   # ⚠️ Auto-update schema (use cautiously in prod)
+    show-sql: true       # ✅ Show SQL queries (useful for debugging)
 
   config:
-    import: optional:configserver:http://localhost:8071/
+    import: optional:configserver:http://localhost:8071/   # ✅ Import configs from Config Server
 
   cloud:
     stream:
       bindings:
         springCloudBusInput:
           destination: springCloudBus
-          group: accounts-service   # stable queue name
+          group: accounts-service   # ✅ Stable queue name
         springCloudBusOutput:
           destination: springCloudBus
       rabbit:
         bindings:
           springCloudBusInput:
             consumer:
-              declareExchange: true    # Force exchange declaration
-              autoBindDlq: true        # Auto-bind dead-letter queue
-              queueNameGroupOnly: true # avoid anonymous queues
+              declareExchange: true    # ✅ Force exchange declaration
+              autoBindDlq: true        # ✅ Auto-bind dead-letter queue
+              queueNameGroupOnly: true # ✅ Avoid anonymous queues
 
   rabbitmq:
     host: "localhost"
-    port: 5672   # Correct AMQP port (not 15672)
+    port: 5672   # ✅ Correct AMQP port (15672 is management UI)
     username: "guest"
     password: "guest"
-    virtual-host: /
+    virtual-host: /   # ✅ Default vhost
 
 management:
   endpoints:
     web:
       exposure:
-        include: "*"
+        include: "*"   # ⚠️ Exposes all actuator endpoints (restrict in prod)

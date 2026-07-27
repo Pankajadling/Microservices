@@ -1,0 +1,16 @@
+spring:
+  config:
+    activate:
+      on-profile: "qa"
+
+build:
+  version: "2.0"
+
+cards:
+  message: "Welcome to EazyBank cards related QA APIs"
+  contactDetails:
+    name: "Glean Philips - QA Lead"
+    email: "glean@eazybank.com"
+  onCallSupport:
+    - "(777) 666-1234"
+    - "(777) 623-1345"

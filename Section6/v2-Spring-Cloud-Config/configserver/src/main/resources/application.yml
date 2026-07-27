@@ -1,25 +1,25 @@
 server:
-  port: 8071
+  port: 8071   # ✅ Correct: Config Server will run on port 8071
 
 spring:
   application:
-    name: configserver
+    name: configserver   # ✅ Application name
 
   profiles:
-    active: git
+    active: git   # ✅ Active profile set to git (can switch to 'native' if using local file system)
 
   cloud:
     config:
       server:
-        # Native example:
+        # Native example (use when storing configs locally instead of Git):
         # native:
-        # Use this "native" option for search-location classpath & file system.
-        # search-locations: classpath:/config   # Use the class path. Use inside project folder
-        # search-locations: file:///D:/Study-Material/Master-Microservices-with-SpringBoot-Docker-Kubernetes/Learning_Project/Section6/Config   # Use the file system folder location
-        # Enable above any one search-location when "native" option enabled
-        git:    # When using git then use this option
-          uri: https://github.com/eazybytes/eazybytes-config.git
-          default-label: main   # branch name
+        #   search-locations: classpath:/config   # Use inside project folder
+        #   search-locations: file:///D:/Study-Material/.../Config   # Use file system folder location
+        # Enable above only when "native" profile is active
+
+        git:    # ✅ Git-based config repository
+          uri: https://github.com/Pankajadling/microservices-config.git   # ✅ Git repo URL
+          default-label: main   # ✅ Branch name
           timeout: 5
           clone-on-start: true
           force-pull: true
@@ -28,7 +28,7 @@ spring:
       bindings:
         springCloudBusInput:
           destination: springCloudBus
-          group: configserver   # stable queue name
+          group: configserver   # ✅ Stable queue name
         springCloudBusOutput:
           destination: springCloudBus
       rabbit:
@@ -41,17 +41,25 @@ spring:
 
   rabbitmq:
     host: "localhost"
-    port: 5672   # Correct AMQP port (not 15672)
+    port: 5672   # ✅ Correct AMQP port (15672 is for management UI, not messaging)
     username: "guest"
     password: "guest"
-    virtual-host: /
+    virtual-host: /   # ✅ Default vhost
 
 management:
   endpoints:
     web:
       exposure:
-        include: "*"
+        include: "*"   # ✅ Expose all actuator endpoints
+  health:
+    readiness-state:
+      enabled: true
+    liveness-state:
+      enabled: true
+  endpoint:
+    health:
+      probes:
+        enabled: true   # ✅ Enable health probes for Kubernetes
 
 encrypt:
-  key: "45D81EC1EF61DF9AD8D3E5BB397F9"
-
+  key: "45D81EC1EF61DF9AD8D3E5BB397F9"   # ✅ Encryption key for config server

@@ -1,0 +1,74 @@
+services:
+  rabbit:
+    image: rabbitmq:3-management
+    hostname: rabbitmq
+    ports:
+      - "5672:5672"   # ✅ AMQP messaging port
+      - "15672:15672" # ✅ Management UI port
+    healthcheck:
+      test: rabbitmq-diagnostics check_port_connectivity
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+    extends:
+      file: common-config.yml
+      service: network-deploy-service   # ⚠️ Ensure this service is defined in common-config.yml
+
+  configserver:
+    image: "pankajadling1193/configserver:s6"
+    container_name: configserver-ms
+    ports:
+      - "8071:8071"
+    depends_on:
+      rabbit:
+        condition: service_healthy   # ✅ Wait until RabbitMQ is healthy
+    healthcheck:
+      test: "curl --fail --silent localhost:8071/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    extends:
+      file: common-config.yml
+      service: microservice-base-config   # ⚠️ Ensure this base config is defined in common-config.yml
+
+  accounts:
+    image: "pankajadling1193/accounts:s6"
+    container_name: accounts-ms
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_APPLICATION_NAME: "accounts"
+    extends:
+      file: common-config.yml
+      service: microservice-configserver-config   # ⚠️ Ensure this config is defined in common-config.yml
+
+  loans:
+    image: "pankajadling1193/loans:s6"
+    container_name: loans-ms
+    ports:
+      - "8090:8090"
+    environment:
+      SPRING_APPLICATION_NAME: "loans"
+    extends:
+      file: common-config.yml
+      service: microservice-configserver-config
+
+  cards:
+    image: "pankajadling1193/cards:s6"
+    container_name: cards-ms
+    ports:
+      - "9000:9000"
+    environment:
+      SPRING_APPLICATION_NAME: "cards"
+    extends:
+      file: common-config.yml
+      service: microservice-configserver-config
+
+networks:
+  eazybank:
+    driver: "bridge"   # ✅ Default bridge network
+
+# The above configuration moves common information into common-config.yml
+# Each service uses 'extends' to inherit shared settings.

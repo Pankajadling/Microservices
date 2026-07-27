@@ -1,0 +1,22 @@
+services:
+  network-deploy-service:
+    networks:
+      - eazybank   # ✅ Ensures all services share the same custom network
+
+  microservice-base-config:
+    extends:
+      service: network-deploy-service   # ✅ Inherits network settings
+    deploy:
+      resources:
+        limits:
+          memory: 700m   # ✅ Memory limit set (consider adding CPU limits too)
+
+  microservice-configserver-config:
+    extends:
+      service: microservice-base-config   # ✅ Inherits network + memory limits
+    depends_on:
+      configserver:
+        condition: service_healthy   # ⚠️ This reference assumes 'configserver' is defined in the main docker-compose.yml
+    environment:
+      SPRING_PROFILES_ACTIVE: default   # ⚠️ Earlier application.yml files used 'prod'. Align profiles consistently.
+      SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071/"   # ⚠️ Missing 'optional:' prefix (best practice to avoid startup failure if configserver is down)
