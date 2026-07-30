@@ -1,0 +1,65 @@
+server:
+  port: 8071   # ✅ Correct: Config Server will run on port 8071
+
+spring:
+  application:
+    name: configserver   # ✅ Application name
+
+  profiles:
+    active: git   # ✅ Active profile set to git (can switch to 'native' if using local file system)
+
+  cloud:
+    config:
+      server:
+        # Native example (use when storing configs locally instead of Git):
+        # native:
+        #   search-locations: classpath:/config   # Use inside project folder
+        #   search-locations: file:///D:/Study-Material/.../Config   # Use file system folder location
+        # Enable above only when "native" profile is active
+
+        git:    # ✅ Git-based config repository
+          uri: https://github.com/Pankajadling/microservices-config.git   # ✅ Git repo URL
+          default-label: main   # ✅ Branch name
+          timeout: 5
+          clone-on-start: true
+          force-pull: true
+
+    stream:
+      bindings:
+        springCloudBusInput:
+          destination: springCloudBus
+          group: configserver   # ✅ Stable queue name
+        springCloudBusOutput:
+          destination: springCloudBus
+      rabbit:
+        bindings:
+          springCloudBusInput:
+            consumer:
+              declareExchange: true
+              autoBindDlq: true
+              queueNameGroupOnly: true
+
+  rabbitmq:
+    host: "localhost"
+    port: 5672   # ✅ Correct AMQP port (15672 is for management UI, not messaging)
+    username: "guest"
+    password: "guest"
+    virtual-host: /   # ✅ Default vhost
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"   # ✅ Expose all actuator endpoints
+  health:
+    readiness-state:
+      enabled: true
+    liveness-state:
+      enabled: true
+  endpoint:
+    health:
+      probes:
+        enabled: true   # ✅ Enable health probes for Kubernetes
+
+encrypt:
+  key: "45D81EC1EF61DF9AD8D3E5BB397F9"   # ✅ Encryption key for config server
